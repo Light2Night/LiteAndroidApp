@@ -3,4 +3,5 @@
     <string name="registration">Реєстрація</string>
     <string name="email">Email</string>
     <string name="fullName">ПІБ</string>
+    <string name="phone">Номер телефону</string>
 </resources>
