@@ -5,4 +5,5 @@
     <string name="fullName">ПІБ</string>
     <string name="phone">Номер телефону</string>
     <string name="selectImage">Обрати фото</string>
+    <string name="userPhoto">User\'s photo</string>
 </resources>
