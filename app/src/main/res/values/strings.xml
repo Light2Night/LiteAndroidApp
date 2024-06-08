@@ -6,4 +6,8 @@
     <string name="phone">Номер телефону</string>
     <string name="selectImage">Обрати фото</string>
     <string name="userPhoto">User\'s photo</string>
+    <string name="login">Вхід</string>
+    <string name="password">Пароль</string>
+    <string name="repeatPassword">Повторіть пароль</string>
+    <string name="loginButton">Увійти</string>
 </resources>
