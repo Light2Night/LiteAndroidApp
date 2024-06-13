@@ -3,15 +3,12 @@ package com.it.liteapp;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -45,7 +42,7 @@ public class RegistrationActivity extends BaseActivity {
             return insets;
         });
 
-        imageView = (ImageView) findViewById(R.id.image);
+        imageView = findViewById(R.id.image);
 
         Glide.with(this)
                 .load("https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/corporate-user-icon.png")
