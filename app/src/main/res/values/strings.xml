@@ -13,4 +13,5 @@
     <string name="home">Домашня сторінка</string>
     <string name="search">Пошук</string>
     <string name="notifications">Сповіщення</string>
+    <string name="main_page_header">Головна сторінка</string>
 </resources>
