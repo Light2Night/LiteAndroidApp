@@ -10,6 +10,7 @@
     <string name="password">Пароль</string>
     <string name="repeatPassword">Повторіть пароль</string>
     <string name="loginButton">Увійти</string>
+    <string name="registerButton">Зареєструватися</string>
     <string name="home">Домашня сторінка</string>
     <string name="search">Пошук</string>
     <string name="main_page_header">Головна сторінка</string>

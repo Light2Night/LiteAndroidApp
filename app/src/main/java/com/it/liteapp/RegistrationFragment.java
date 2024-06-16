@@ -38,7 +38,7 @@ public class RegistrationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
 
         imageView = view.findViewById(R.id.image);
-        Button button = view.findViewById(R.id.button);
+        Button button = view.findViewById(R.id.photoButton);
 
         Glide.with(this)
                 .load("https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/corporate-user-icon.png")
