@@ -1,29 +1,51 @@
 package com.it.liteapp;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 
-import android.widget.ImageView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-
-public class MainActivity extends BaseActivity {
-
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_page), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment selectedFragment = null;
+
+                int id = item.getItemId();
+
+                if (id == R.id.m_home) {
+                    selectedFragment = new HomeFragment();
+                } else if (id == R.id.m_login) {
+                    selectedFragment = new LoginFragment();
+                } else if (id == R.id.m_register) {
+                    selectedFragment = new RegistrationFragment();
+                }
+
+                if (selectedFragment != null) {
+                    SetFragment(selectedFragment);
+                }
+
+                return true;
+            }
         });
+
+        if (savedInstanceState == null) {
+            SetFragment(new HomeFragment());
+        }
+    }
+
+    private void SetFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
 }

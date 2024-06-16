@@ -12,6 +12,8 @@
     <string name="loginButton">Увійти</string>
     <string name="home">Домашня сторінка</string>
     <string name="search">Пошук</string>
-    <string name="notifications">Сповіщення</string>
     <string name="main_page_header">Головна сторінка</string>
+    <string name="menu_home">Головна</string>
+    <string name="menu_login">Вхід</string>
+    <string name="menu_register">Реєстрація</string>
 </resources>
