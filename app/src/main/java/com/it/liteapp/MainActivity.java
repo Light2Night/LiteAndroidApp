@@ -1,9 +1,7 @@
 package com.it.liteapp;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -17,27 +15,14 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment selectedFragment = null;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = GetFragmentById(item.getItemId());
 
-                int id = item.getItemId();
-
-                if (id == R.id.m_home) {
-                    selectedFragment = new HomeFragment();
-                } else if (id == R.id.m_login) {
-                    selectedFragment = new LoginFragment();
-                } else if (id == R.id.m_register) {
-                    selectedFragment = new RegistrationFragment();
-                }
-
-                if (selectedFragment != null) {
-                    SetFragment(selectedFragment);
-                }
-
-                return true;
+            if (selectedFragment != null) {
+                SetFragment(selectedFragment);
             }
+
+            return true;
         });
 
         if (savedInstanceState == null) {
@@ -47,5 +32,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void SetFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+    }
+
+    private Fragment GetFragmentById(int id) {
+        if (id == R.id.m_home) {
+            return new HomeFragment();
+        } else if (id == R.id.m_login) {
+            return new LoginFragment();
+        } else if (id == R.id.m_register) {
+            return new RegistrationFragment();
+        }
+
+        return null;
     }
 }
