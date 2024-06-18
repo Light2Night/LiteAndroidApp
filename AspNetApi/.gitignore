@@ -283,11 +283,8 @@ package-lock.json
 
 
 
-# Development appsettings.json
-/Booking/appsettings.Development.json
-
 # API data
-/Booking/Data/
+/Api/Data/
 
 # Docker volumes
 /volumes/
