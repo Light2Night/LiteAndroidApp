@@ -1,8 +1,15 @@
 using Api.Services;
+using Api.Services.ControllerServices.Interfaces;
 using Api.Services.Interfaces;
+using Api.ViewModels.Category;
+using Api.Services.ControllerServices;
+using Api.Services.PaginationServices;
+using Api.Mapper;
+using Api.Validators.Category;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Model.Context;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +35,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddAutoMapper(typeof(AppMapProfile));
+builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoryValidator>();
+
+builder.Services.AddScoped<IMigrationService, MigrationService>();
+
 builder.Services.AddTransient<IImageService, ImageService>();
+builder.Services.AddTransient<IImageValidator, ImageValidator>();
+builder.Services.AddTransient<IExistingEntityCheckerService, ExistingEntityCheckerService>();
+
+builder.Services.AddTransient<ICategoriesControllerService, CategoriesControllerService>();
+builder.Services.AddTransient<IPaginationService<CategoryVm, CategoryFilterVm>, CategoriesPaginationService>();
 
 
 var app = builder.Build();
