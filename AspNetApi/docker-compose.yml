@@ -1,0 +1,26 @@
+services:
+
+  api:
+    container_name: api-container
+    image: android-api
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5100:8080"
+    volumes:
+      - ./volumes/api/images:/app/Data/Images
+    depends_on:
+      - postgresql
+
+  postgresql:
+    container_name: postgresql-db-container
+    image: postgres
+    restart: on-failure
+    ports:
+        - "5400:5432"
+    environment:
+      POSTGRES_PASSWORD: devDb1234
+    volumes:
+        - ./volumes/db:/var/lib/postgresql/data

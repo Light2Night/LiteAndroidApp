@@ -1,0 +1,18 @@
+# IDEs files
+/.vs/
+/.idea/
+
+# Build files
+/Api/bin/
+/Api/obj/
+/Model/bin/
+/Model/obj/
+
+# Development appsettings.json
+/Api/appsettings.Development.json
+
+# API data
+/Api/Data/
+
+# Docker volumes
+/volumes/
