@@ -1,7 +1,9 @@
-﻿using Api.Services.Interfaces;
+﻿using Api.Controllers;
+using Api.Services.ControllerServices.Interfaces;
+using Api.Services.Interfaces;
 using Api.ViewModels.Category;
 using AutoMapper;
-using Api.Services.ControllerServices.Interfaces;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Model.Context;
 using Model.Entities;
@@ -11,8 +13,31 @@ namespace Api.Services.ControllerServices;
 public class CategoriesControllerService(
 	DataContext context,
 	IMapper mapper,
-	IImageService imageService
+	IImageService imageService,
+	ICacheService cacheService
 ) : ICategoriesControllerService {
+
+	public async Task<IEnumerable<CategoryVm>> GetAllAsync() {
+		if (await cacheService.IsContainsCacheAsync(nameof(CategoriesController), nameof(CategoriesController.GetAll))) {
+			return await cacheService.GetCacheAsync<IEnumerable<CategoryVm>>(
+				nameof(CategoriesController),
+				nameof(CategoriesController.GetAll)
+			);
+		}
+
+		var entities = await context.Categories
+			.ProjectTo<CategoryVm>(mapper.ConfigurationProvider)
+			.ToArrayAsync();
+
+		await cacheService.SetCacheAsync(
+			nameof(CategoriesController),
+			nameof(CategoriesController.GetAll),
+			entities,
+			TimeSpan.FromSeconds(10)
+		);
+
+		return entities;
+	}
 
 	public async Task CreateAsync(CreateCategoryVm vm) {
 		var entity = mapper.Map<Category>(vm);

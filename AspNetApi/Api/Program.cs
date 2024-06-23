@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Model.Context;
 using FluentValidation;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,12 +39,19 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(AppMapProfile));
 builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoryValidator>();
+builder.Services.AddSingleton<IConnectionMultiplexer>(
+	ConnectionMultiplexer.Connect(
+		builder.Configuration.GetConnectionString("Redis")
+			?? throw new NullReferenceException("Redis connection string is not inicialized")
+	)
+);
 
 builder.Services.AddScoped<IMigrationService, MigrationService>();
 
 builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddTransient<IImageValidator, ImageValidator>();
 builder.Services.AddTransient<IExistingEntityCheckerService, ExistingEntityCheckerService>();
+builder.Services.AddScoped<ICacheService, RedisCacheService>();
 
 builder.Services.AddTransient<ICategoriesControllerService, CategoriesControllerService>();
 builder.Services.AddTransient<IPaginationService<CategoryVm, CategoryFilterVm>, CategoriesPaginationService>();

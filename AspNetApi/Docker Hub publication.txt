@@ -1,0 +1,3 @@
+docker image tag android-api:latest light2night/android-api:latest
+
+docker push light2night/android-api:latest

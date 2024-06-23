@@ -22,11 +22,7 @@ public class CategoriesController(
 
 	[HttpGet]
 	public async Task<IActionResult> GetAll() {
-		var entities = await context.Categories
-			.ProjectTo<CategoryVm>(mapper.ConfigurationProvider)
-			.ToArrayAsync();
-
-		return Ok(entities);
+		return Ok(await service.GetAllAsync());
 	}
 
 	[HttpGet]
