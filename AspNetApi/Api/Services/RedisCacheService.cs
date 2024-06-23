@@ -36,16 +36,16 @@ public class RedisCacheService(
 		await GetCacheAsync<T>(action.ControllerName, action.ActionName, argument);
 
 
-	public async Task SetCacheAsync(string controllerName, string actionName, object value, TimeSpan? expiry) {
+	public async Task SetCacheAsync(string controllerName, string actionName, object? value, TimeSpan? expiry = null) {
 		await SetCacheByKeyAsync(CreateKey(controllerName, actionName), value, expiry);
 	}
-	public async Task SetCacheAsync(ActionDto action, object value, TimeSpan? expiry) =>
+	public async Task SetCacheAsync(ActionDto action, object? value, TimeSpan? expiry = null) =>
 		await SetCacheAsync(action.ControllerName, action.ActionName, value, expiry);
 
-	public async Task SetCacheAsync(string controllerName, string actionName, object argument, object value, TimeSpan? expiry) {
+	public async Task SetCacheAsync(string controllerName, string actionName, object argument, object? value, TimeSpan? expiry = null) {
 		await SetCacheByKeyAsync(CreateKey(controllerName, actionName, argument), value, expiry);
 	}
-	public async Task SetCacheAsync(ActionDto action, object argument, object value, TimeSpan? expiry) =>
+	public async Task SetCacheAsync(ActionDto action, object argument, object? value, TimeSpan? expiry = null) =>
 		await SetCacheAsync(action.ControllerName, action.ActionName, argument, value, expiry);
 
 
@@ -81,13 +81,10 @@ public class RedisCacheService(
 		if (json.IsNullOrEmpty)
 			throw new NullReferenceException("The key is not exists");
 
-		var value = JsonSerializer.Deserialize<T>(json.ToString())
-			?? throw new NullReferenceException("JsonSerializer.Deserialize returns null");
-
-		return value;
+		return JsonSerializer.Deserialize<T>(json.ToString())!;
 	}
 
-	private async Task SetCacheByKeyAsync(string key, object value, TimeSpan? expiry) {
+	private async Task SetCacheByKeyAsync(string key, object? value, TimeSpan? expiry) {
 		var json = JsonSerializer.Serialize(value);
 
 		await _redis.StringSetAsync(key, json);

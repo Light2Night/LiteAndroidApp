@@ -54,6 +54,24 @@ public class CategoriesControllerService(
 		return page;
 	}
 
+	public async Task<CategoryVm?> TryGetByIdAsync(long id) {
+		var action = new ActionDto(
+			nameof(CategoriesController),
+			nameof(CategoriesController.GetById)
+		);
+
+		if (await cacheService.IsContainsCacheAsync(action, id))
+			return await cacheService.GetCacheAsync<CategoryVm?>(action, id);
+
+		var entity = await context.Categories
+			.ProjectTo<CategoryVm>(mapper.ConfigurationProvider)
+			.FirstOrDefaultAsync(c => c.Id == id);
+
+		await cacheService.SetCacheAsync(action, id, entity, TimeSpan.FromHours(1));
+
+		return entity;
+	}
+
 	public async Task CreateAsync(CreateCategoryVm vm) {
 		var entity = mapper.Map<Category>(vm);
 		entity.Image = await imageService.SaveImageAsync(vm.Image);
