@@ -31,7 +31,7 @@ public class CategoriesControllerService(
 			.ProjectTo<CategoryVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
-		await cacheService.SetCacheAsync(action, entities, TimeSpan.FromSeconds(10));
+		await cacheService.SetCacheAsync(action, entities, TimeSpan.FromHours(1));
 
 		return entities;
 	}
@@ -44,6 +44,7 @@ public class CategoriesControllerService(
 
 		try {
 			await context.SaveChangesAsync();
+			await cacheService.DeleteCacheByControllerAsync(nameof(CategoriesController));
 		}
 		catch (Exception) {
 			imageService.DeleteImageIfExists(entity.Image);
@@ -61,6 +62,7 @@ public class CategoriesControllerService(
 
 		try {
 			await context.SaveChangesAsync();
+			await cacheService.DeleteCacheByControllerAsync(nameof(CategoriesController));
 
 			imageService.DeleteImageIfExists(oldImage);
 		}
@@ -78,6 +80,7 @@ public class CategoriesControllerService(
 
 		context.Categories.Remove(entity);
 		await context.SaveChangesAsync();
+		await cacheService.DeleteCacheByControllerAsync(nameof(CategoriesController));
 
 		imageService.DeleteImageIfExists(entity.Image);
 	}

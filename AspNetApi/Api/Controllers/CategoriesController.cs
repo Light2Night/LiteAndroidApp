@@ -1,5 +1,4 @@
-﻿using Api.DataTransferObjects;
-using Api.Services.ControllerServices.Interfaces;
+﻿using Api.Services.ControllerServices.Interfaces;
 using Api.Services.Interfaces;
 using Api.ViewModels.Category;
 using AutoMapper;
