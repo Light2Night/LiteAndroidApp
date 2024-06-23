@@ -1,4 +1,5 @@
 ﻿using Api.Controllers;
+using Api.DataTransferObjects;
 using Api.Services.ControllerServices.Interfaces;
 using Api.Services.Interfaces;
 using Api.ViewModels.Category;
@@ -18,23 +19,19 @@ public class CategoriesControllerService(
 ) : ICategoriesControllerService {
 
 	public async Task<IEnumerable<CategoryVm>> GetAllAsync() {
-		if (await cacheService.IsContainsCacheAsync(nameof(CategoriesController), nameof(CategoriesController.GetAll))) {
-			return await cacheService.GetCacheAsync<IEnumerable<CategoryVm>>(
-				nameof(CategoriesController),
-				nameof(CategoriesController.GetAll)
-			);
-		}
+		var action = new ActionDto(
+			nameof(CategoriesController),
+			nameof(CategoriesController.GetAll)
+		);
+
+		if (await cacheService.IsContainsCacheAsync(action))
+			return await cacheService.GetCacheAsync<IEnumerable<CategoryVm>>(action);
 
 		var entities = await context.Categories
 			.ProjectTo<CategoryVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
-		await cacheService.SetCacheAsync(
-			nameof(CategoriesController),
-			nameof(CategoriesController.GetAll),
-			entities,
-			TimeSpan.FromSeconds(10)
-		);
+		await cacheService.SetCacheAsync(action, entities, TimeSpan.FromSeconds(10));
 
 		return entities;
 	}

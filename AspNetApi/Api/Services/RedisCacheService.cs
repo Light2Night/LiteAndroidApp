@@ -1,4 +1,5 @@
-﻿using Api.Services.Interfaces;
+﻿using Api.DataTransferObjects;
+using Api.Services.Interfaces;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -10,39 +11,53 @@ public class RedisCacheService(
 	private readonly IDatabase _redis = connectionMultiplexer.GetDatabase();
 
 	public async Task<bool> IsContainsCacheAsync(string controllerName, string actionName) {
-		var key = CreateKey(controllerName, actionName);
+		return await IsContainsCacheByKeyAsync(CreateKey(controllerName, actionName));
+	}
 
-		return await IsContainsCacheByKeyAsync(key);
+	public async Task<bool> IsContainsCacheAsync(ActionDto action) {
+		return await IsContainsCacheByKeyAsync(CreateKey(action));
 	}
 
 	public async Task<bool> IsContainsCacheAsync(string controllerName, string actionName, string arguments) {
-		var key = CreateKey(controllerName, actionName, arguments);
-
-		return await IsContainsCacheByKeyAsync(key);
+		return await IsContainsCacheByKeyAsync(CreateKey(controllerName, actionName, arguments));
 	}
 
-	public async Task<T> GetCacheAsync<T>(string controllerName, string actionName) {
-		var key = CreateKey(controllerName, actionName);
+	public async Task<bool> IsContainsCacheAsync(ActionDto action, string arguments) {
+		return await IsContainsCacheByKeyAsync(CreateKey(action, arguments));
+	}
 
-		return await GetCacheByKeyAsync<T>(key);
+
+	public async Task<T> GetCacheAsync<T>(string controllerName, string actionName) {
+		return await GetCacheByKeyAsync<T>(CreateKey(controllerName, actionName));
+	}
+
+	public async Task<T> GetCacheAsync<T>(ActionDto action) {
+		return await GetCacheByKeyAsync<T>(CreateKey(action));
 	}
 
 	public async Task<T> GetCacheAsync<T>(string controllerName, string actionName, string arguments) {
-		var key = CreateKey(controllerName, actionName, arguments);
-
-		return await GetCacheByKeyAsync<T>(key);
+		return await GetCacheByKeyAsync<T>(CreateKey(controllerName, actionName, arguments));
 	}
 
-	public async Task SetCacheAsync(string controllerName, string actionName, object value, TimeSpan? expiry) {
-		var key = CreateKey(controllerName, actionName);
+	public async Task<T> GetCacheAsync<T>(ActionDto action, string arguments) {
+		return await GetCacheByKeyAsync<T>(CreateKey(action, arguments));
+	}
 
-		await SetCacheByKeyAsync(key, value, expiry);
+
+	public async Task SetCacheAsync(string controllerName, string actionName, object value, TimeSpan? expiry) {
+		await SetCacheByKeyAsync(CreateKey(controllerName, actionName), value, expiry);
+	}
+
+	public async Task SetCacheAsync(ActionDto action, object value, TimeSpan? expiry) {
+		await SetCacheByKeyAsync(CreateKey(action), value, expiry);
 	}
 
 	public async Task SetCacheAsync(string controllerName, string actionName, string arguments, object value, TimeSpan? expiry) {
-		var key = CreateKey(controllerName, actionName, arguments);
+		await SetCacheByKeyAsync(CreateKey(controllerName, actionName, arguments), value, expiry);
+	}
 
-		await SetCacheByKeyAsync(key, value, expiry);
+	public async Task SetCacheAsync(ActionDto action, string arguments, object value, TimeSpan? expiry) {
+		await SetCacheByKeyAsync(CreateKey(action, arguments), value, expiry);
 	}
 
 
@@ -72,9 +87,12 @@ public class RedisCacheService(
 	}
 
 	private static string CreateKey(string controllerName, string actionName) => $"{controllerName}:{actionName}";
+	private static string CreateKey(ActionDto action) => CreateKey(action.ControllerName, action.ActionName);
 	private static string CreateKey(string controllerName, string actionName, string arguments) {
 		var argumentsJson = JsonSerializer.Serialize(arguments);
 
 		return $"{CreateKey(controllerName, actionName)}:{arguments}";
 	}
+	private static string CreateKey(ActionDto action, string arguments) =>
+		CreateKey(action.ControllerName, action.ActionName, arguments);
 }
