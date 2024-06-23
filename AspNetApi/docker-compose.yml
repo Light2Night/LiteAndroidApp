@@ -19,8 +19,8 @@ services:
     image: postgres
     restart: on-failure
     ports:
-        - "5400:5432"
+      - "5400:5432"
     environment:
       POSTGRES_PASSWORD: devDb1234
     volumes:
-        - ./volumes/db:/var/lib/postgresql/data
+      - ./volumes/db:/var/lib/postgresql/data

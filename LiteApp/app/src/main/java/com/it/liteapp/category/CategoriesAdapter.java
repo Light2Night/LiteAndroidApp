@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.it.liteapp.R;
 import com.it.liteapp.config.Config;
 import com.it.liteapp.dto.CategoryItemDTO;
@@ -41,6 +42,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoryCardViewHold
                     .placeholder(R.drawable.placeholder_image)
                     .error(R.drawable.error_image)
                     //.apply(new RequestOptions().override(400))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .into(holder.getIvCategoryImage());
         }
     }
