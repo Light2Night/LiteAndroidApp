@@ -21,4 +21,9 @@ RUN dotnet publish -o /app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app .
+
+# information
+EXPOSE 8080
+
+# run
 ENTRYPOINT ["dotnet", "Api.dll"]

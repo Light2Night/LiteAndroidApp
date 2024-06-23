@@ -2,7 +2,7 @@ services:
 
   api:
     container_name: api-container
-    image: android-api
+    image: light2night/android-api
     restart: on-failure
     build:
       context: .
