@@ -3,6 +3,7 @@ using Api.DataTransferObjects;
 using Api.Services.ControllerServices.Interfaces;
 using Api.Services.Interfaces;
 using Api.ViewModels.Category;
+using Api.ViewModels.Pagination;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,8 @@ public class CategoriesControllerService(
 	DataContext context,
 	IMapper mapper,
 	IImageService imageService,
-	ICacheService cacheService
+	ICacheService cacheService,
+	IPaginationService<CategoryVm, CategoryFilterVm> pagination
 ) : ICategoriesControllerService {
 
 	public async Task<IEnumerable<CategoryVm>> GetAllAsync() {
@@ -34,6 +36,22 @@ public class CategoriesControllerService(
 		await cacheService.SetCacheAsync(action, entities, TimeSpan.FromHours(1));
 
 		return entities;
+	}
+
+	public async Task<PageVm<CategoryVm>> GetPageAsync(CategoryFilterVm vm) {
+		var action = new ActionDto(
+			nameof(CategoriesController),
+			nameof(CategoriesController.GetPage)
+		);
+
+		if (await cacheService.IsContainsCacheAsync(action, vm))
+			return await cacheService.GetCacheAsync<PageVm<CategoryVm>>(action, vm);
+
+		var page = await pagination.GetPageAsync(vm);
+
+		await cacheService.SetCacheAsync(action, vm, page, TimeSpan.FromHours(1));
+
+		return page;
 	}
 
 	public async Task CreateAsync(CreateCategoryVm vm) {

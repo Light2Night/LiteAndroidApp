@@ -1,5 +1,4 @@
 ﻿using Api.Services.ControllerServices.Interfaces;
-using Api.Services.Interfaces;
 using Api.ViewModels.Category;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -9,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Model.Context;
 
 namespace Api.Controllers;
+
 [Route("api/[controller]/[action]")]
 [ApiController]
 public class CategoriesController(
@@ -16,8 +16,7 @@ public class CategoriesController(
 	IMapper mapper,
 	IValidator<CreateCategoryVm> createValidator,
 	IValidator<UpdateCategoryVm> updateValidator,
-	ICategoriesControllerService service,
-	IPaginationService<CategoryVm, CategoryFilterVm> pagination
+	ICategoriesControllerService service
 ) : ControllerBase {
 
 	[HttpGet]
@@ -28,7 +27,7 @@ public class CategoriesController(
 	[HttpGet]
 	public async Task<IActionResult> GetPage([FromQuery] CategoryFilterVm vm) {
 		try {
-			return Ok(await pagination.GetPageAsync(vm));
+			return Ok(await service.GetPageAsync(vm));
 		}
 		catch (Exception ex) {
 			return BadRequest(ex.Message);

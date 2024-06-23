@@ -97,28 +97,32 @@ public class RedisCacheService(
 	}
 
 	public async Task DeleteKeysByPatternAsync(string pattern) {
-		await foreach (var key in GetKeysAsync(pattern)) {
-			Console.WriteLine(key);
+		await foreach (var key in GetKeysByPatternAsync(pattern)) {
 			await _redis.KeyDeleteAsync(key);
 		}
 	}
 
-	private static string CreateKey(string controllerName, string actionName) => $"{controllerName}:{actionName}";
-	private static string CreateKey(ActionDto action) => CreateKey(action.ControllerName, action.ActionName);
-	private static string CreateKey(string controllerName, string actionName, object argument) {
-		var argumentsJson = JsonSerializer.Serialize(argument);
 
-		return $"{CreateKey(controllerName, actionName)}:{argument}";
-	}
+	private static string CreateKey(string controllerName, string actionName) =>
+		$"{controllerName}:{actionName}";
+
+	private static string CreateKey(ActionDto action) =>
+		CreateKey(action.ControllerName, action.ActionName);
+
+	private static string CreateKey(string controllerName, string actionName, object argument) =>
+		$"{CreateKey(controllerName, actionName)}:{JsonSerializer.Serialize(argument)}";
+
 	private static string CreateKey(ActionDto action, object argument) =>
 		CreateKey(action.ControllerName, action.ActionName, argument);
 
-	public async IAsyncEnumerable<string> GetKeysAsync(string pattern) {
+
+	public async IAsyncEnumerable<string> GetKeysByPatternAsync(string pattern) {
 		if (string.IsNullOrWhiteSpace(pattern))
 			throw new ArgumentException("Value cannot be null or whitespace.", nameof(pattern));
 
 		foreach (var endpoint in connectionMultiplexer.GetEndPoints()) {
 			var server = connectionMultiplexer.GetServer(endpoint);
+
 			await foreach (var key in server.KeysAsync(pattern: pattern)) {
 				yield return key.ToString();
 			}
