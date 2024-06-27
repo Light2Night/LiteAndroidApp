@@ -38,7 +38,7 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddAutoMapper(typeof(AppMapProfile));
-builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoryValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddSingleton<IConnectionMultiplexer>(
 	ConnectionMultiplexer.Connect(
 		builder.Configuration.GetConnectionString("Redis")
