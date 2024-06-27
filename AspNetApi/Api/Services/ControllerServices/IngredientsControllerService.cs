@@ -2,7 +2,7 @@
 using Api.DataTransferObjects;
 using Api.Services.ControllerServices.Interfaces;
 using Api.Services.Interfaces;
-using Api.ViewModels.Category;
+using Api.ViewModels.Ingredient;
 using Api.ViewModels.Pagination;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -12,25 +12,25 @@ using Model.Entities;
 
 namespace Api.Services.ControllerServices;
 
-public class CategoriesControllerService(
+public class IngredientsControllerService(
 	DataContext context,
 	IMapper mapper,
 	IImageService imageService,
 	ICacheService cacheService,
-	IPaginationService<CategoryVm, CategoryFilterVm> pagination
-) : ICategoriesControllerService {
+	IPaginationService<IngredientVm, IngredientFilterVm> pagination
+) : IIngredientsControllerService {
 
-	public async Task<IEnumerable<CategoryVm>> GetAllAsync() {
+	public async Task<IEnumerable<IngredientVm>> GetAllAsync() {
 		var action = new ActionDto(
 			ControllerName,
-			nameof(CategoriesController.GetAll)
+			nameof(IngredientsController.GetAll)
 		);
 
 		if (await cacheService.IsContainsCacheAsync(action))
-			return await cacheService.GetCacheAsync<IEnumerable<CategoryVm>>(action);
+			return await cacheService.GetCacheAsync<IEnumerable<IngredientVm>>(action);
 
-		var entities = await context.Categories
-			.ProjectTo<CategoryVm>(mapper.ConfigurationProvider)
+		var entities = await context.Ingredients
+			.ProjectTo<IngredientVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
 		await cacheService.SetCacheAsync(action, entities, TimeSpan.FromHours(1));
@@ -38,14 +38,14 @@ public class CategoriesControllerService(
 		return entities;
 	}
 
-	public async Task<PageVm<CategoryVm>> GetPageAsync(CategoryFilterVm vm) {
+	public async Task<PageVm<IngredientVm>> GetPageAsync(IngredientFilterVm vm) {
 		var action = new ActionDto(
 			ControllerName,
-			nameof(CategoriesController.GetPage)
+			nameof(IngredientsController.GetPage)
 		);
 
 		if (await cacheService.IsContainsCacheAsync(action, vm))
-			return await cacheService.GetCacheAsync<PageVm<CategoryVm>>(action, vm);
+			return await cacheService.GetCacheAsync<PageVm<IngredientVm>>(action, vm);
 
 		var page = await pagination.GetPageAsync(vm);
 
@@ -54,29 +54,29 @@ public class CategoriesControllerService(
 		return page;
 	}
 
-	public async Task<CategoryVm?> TryGetByIdAsync(long id) {
+	public async Task<IngredientVm?> TryGetByIdAsync(long id) {
 		var action = new ActionDto(
 			ControllerName,
-			nameof(CategoriesController.GetById)
+			nameof(IngredientsController.GetById)
 		);
 
 		if (await cacheService.IsContainsCacheAsync(action, id))
-			return await cacheService.GetCacheAsync<CategoryVm?>(action, id);
+			return await cacheService.GetCacheAsync<IngredientVm?>(action, id);
 
-		var entity = await context.Categories
-			.ProjectTo<CategoryVm>(mapper.ConfigurationProvider)
-			.FirstOrDefaultAsync(c => c.Id == id);
+		var entity = await context.Ingredients
+			.ProjectTo<IngredientVm>(mapper.ConfigurationProvider)
+			.FirstOrDefaultAsync(x => x.Id == id);
 
 		await cacheService.SetCacheAsync(action, id, entity, TimeSpan.FromHours(1));
 
 		return entity;
 	}
 
-	public async Task CreateAsync(CreateCategoryVm vm) {
-		var entity = mapper.Map<Category>(vm);
+	public async Task CreateAsync(CreateIngredientVm vm) {
+		var entity = mapper.Map<Ingredient>(vm);
 		entity.Image = await imageService.SaveImageAsync(vm.Image);
 
-		await context.Categories.AddAsync(entity);
+		await context.Ingredients.AddAsync(entity);
 
 		try {
 			await context.SaveChangesAsync();
@@ -88,8 +88,8 @@ public class CategoriesControllerService(
 		}
 	}
 
-	public async Task UpdateAsync(UpdateCategoryVm vm) {
-		var entity = await context.Categories.FirstAsync(c => c.Id == vm.Id);
+	public async Task UpdateAsync(UpdateIngredientVm vm) {
+		var entity = await context.Ingredients.FirstAsync(x => x.Id == vm.Id);
 
 		string oldImage = entity.Image;
 
@@ -109,17 +109,17 @@ public class CategoriesControllerService(
 	}
 
 	public async Task DeleteIfExistsAsync(long id) {
-		var entity = await context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+		var entity = await context.Ingredients.FirstOrDefaultAsync(x => x.Id == id);
 
 		if (entity is null)
 			return;
 
-		context.Categories.Remove(entity);
+		context.Ingredients.Remove(entity);
 		await context.SaveChangesAsync();
 		await cacheService.DeleteCacheByControllerAsync(ControllerName);
 
 		imageService.DeleteImageIfExists(entity.Image);
 	}
 
-	private static string ControllerName => nameof(CategoriesController);
+	private static string ControllerName => nameof(IngredientsController);
 }

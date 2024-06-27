@@ -11,4 +11,6 @@ public class ExistingEntityCheckerService(
 	public async Task<bool> IsExistsCategoryIdAsync(long id, CancellationToken cancellationToken) =>
 		await context.Categories.AnyAsync(c => c.Id == id, cancellationToken);
 
+	public async Task<bool> IsExistsIngredientIdAsync(long id, CancellationToken cancellationToken) =>
+		await context.Ingredients.AnyAsync(i => i.Id == id, cancellationToken);
 }

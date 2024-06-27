@@ -1,15 +1,15 @@
+using Api.Mapper;
 using Api.Services;
+using Api.Services.ControllerServices;
 using Api.Services.ControllerServices.Interfaces;
 using Api.Services.Interfaces;
-using Api.ViewModels.Category;
-using Api.Services.ControllerServices;
 using Api.Services.PaginationServices;
-using Api.Mapper;
-using Api.Validators.Category;
+using Api.ViewModels.Category;
+using Api.ViewModels.Ingredient;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Model.Context;
-using FluentValidation;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +55,9 @@ builder.Services.AddScoped<ICacheService, RedisCacheService>();
 
 builder.Services.AddTransient<ICategoriesControllerService, CategoriesControllerService>();
 builder.Services.AddTransient<IPaginationService<CategoryVm, CategoryFilterVm>, CategoriesPaginationService>();
+
+builder.Services.AddTransient<IIngredientsControllerService, IngredientsControllerService>();
+builder.Services.AddTransient<IPaginationService<IngredientVm, IngredientFilterVm>, IngredientsPaginationService>();
 
 
 var app = builder.Build();
