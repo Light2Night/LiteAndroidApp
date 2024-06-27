@@ -15,4 +15,6 @@ public class Pizza {
 	public Category Category { get; set; } = null!;
 
 	public ICollection<PizzaImage> Images { get; set; } = null!;
+
+	public ICollection<PizzaIngredient> Ingredients { get; set; } = null!;
 }

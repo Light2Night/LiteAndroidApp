@@ -8,6 +8,8 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 	public DbSet<Category> Categories { get; set; }
 	public DbSet<Pizza> Pizzas { get; set; }
 	public DbSet<PizzaImage> PizzaImages { get; set; }
+	public DbSet<Ingredient> Ingredients { get; set; }
+	public DbSet<PizzaIngredient> PizzaIngredients { get; set; }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
 		base.OnModelCreating(modelBuilder);
@@ -15,5 +17,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 		new CategoryEntityTypeConfiguration().Configure(modelBuilder.Entity<Category>());
 		new PizzaEntityTypeConfiguration().Configure(modelBuilder.Entity<Pizza>());
 		new PizzaImageEntityTypeConfiguration().Configure(modelBuilder.Entity<PizzaImage>());
+		new IngredientEntityTypeConfiguration().Configure(modelBuilder.Entity<Ingredient>());
+		new PizzaIngredientEntityTypeConfiguration().Configure(modelBuilder.Entity<PizzaIngredient>());
 	}
 }

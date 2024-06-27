@@ -1,11 +1,9 @@
 ﻿namespace Model.Entities;
 
-public class Category {
-	public long Id { get; set; }
-
+public class Ingredient {
 	public string Name { get; set; } = null!;
 
 	public string Image { get; set; } = null!;
 
-	public ICollection<Pizza> Pizzas { get; set; } = null!;
+	public ICollection<PizzaIngredient> Pizzas { get; set; } = null!;
 }
