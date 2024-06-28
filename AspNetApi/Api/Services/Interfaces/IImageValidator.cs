@@ -5,5 +5,5 @@ public interface IImageValidator {
 	Task<bool> IsValidNullPossibeImageAsync(IFormFile? image, CancellationToken cancellationToken);
 
 	Task<bool> IsValidImagesAsync(IEnumerable<IFormFile> images, CancellationToken cancellationToken);
-	Task<bool> IsValidNullPossibeImagesAsync(IEnumerable<IFormFile>? images, CancellationToken cancellationToken);
+	Task<bool> IsValidNullPossibeImagesAsync(IEnumerable<IFormFile?>? images, CancellationToken cancellationToken);
 }

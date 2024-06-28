@@ -13,4 +13,23 @@ public class ExistingEntityCheckerService(
 
 	public async Task<bool> IsExistsIngredientIdAsync(long id, CancellationToken cancellationToken) =>
 		await context.Ingredients.AnyAsync(i => i.Id == id, cancellationToken);
+
+	public async Task<bool> IsExistsIngredientIdsAsync(IEnumerable<long> ids, CancellationToken cancellationToken) {
+		var ingredientsFromDb = await context.Ingredients
+			.Where(i => ids.Contains(i.Id))
+			.Select(i => i.Id)
+			.ToArrayAsync();
+
+		return ids.All(id => ingredientsFromDb.Contains(id));
+	}
+
+	public async Task<bool> IsExistsNullPossibleIngredientIdsAsync(IEnumerable<long>? ids, CancellationToken cancellationToken) {
+		if (ids is null)
+			return true;
+
+		return await IsExistsIngredientIdsAsync(ids, cancellationToken);
+	}
+
+	public async Task<bool> IsExistsPizzaIdAsync(long id, CancellationToken cancellationToken) =>
+		await context.Pizzas.AnyAsync(p => p.Id == id, cancellationToken);
 }

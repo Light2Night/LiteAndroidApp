@@ -31,10 +31,10 @@ public class ImageValidator : IImageValidator {
 		return results.All(r => r);
 	}
 
-	public async Task<bool> IsValidNullPossibeImagesAsync(IEnumerable<IFormFile>? images, CancellationToken cancellationToken) {
+	public async Task<bool> IsValidNullPossibeImagesAsync(IEnumerable<IFormFile?>? images, CancellationToken cancellationToken) {
 		if (images is null)
 			return true;
 
-		return await IsValidImagesAsync(images.Where(i => i is not null), cancellationToken);
+		return await IsValidImagesAsync(images.Where(i => i is not null)!, cancellationToken);
 	}
 }

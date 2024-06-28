@@ -109,16 +109,24 @@ public class CategoriesControllerService(
 	}
 
 	public async Task DeleteIfExistsAsync(long id) {
-		var entity = await context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+		var entity = await context.Categories
+			.FirstOrDefaultAsync(c => c.Id == id);
 
 		if (entity is null)
 			return;
+
+		var imagesForDelete = await context.Pizzas
+			.Include(p => p.Images)
+			.Where(p => p.CategoryId == id)
+			.SelectMany(p => p.Images)
+			.Select(pi => pi.Name)
+			.ToArrayAsync();
 
 		context.Categories.Remove(entity);
 		await context.SaveChangesAsync();
 		await cacheService.DeleteCacheByControllerAsync(ControllerName);
 
-		imageService.DeleteImageIfExists(entity.Image);
+		imageService.DeleteImagesIfExists(imagesForDelete.Append(entity.Image));
 	}
 
 	private static string ControllerName => nameof(CategoriesController);
