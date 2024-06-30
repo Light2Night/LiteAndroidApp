@@ -1,11 +1,11 @@
 ﻿namespace Api.Services.Interfaces;
 
 public interface IImageService {
-	Task<string> SaveImageAsync(byte[] bytes);
 	Task<string> SaveImageAsync(IFormFile image);
 	Task<string> SaveImageAsync(string base64);
-	Task<List<string>> SaveImagesAsync(IEnumerable<byte[]> bytesArrays);
+	Task<string> SaveImageAsync(byte[] bytes);
 	Task<List<string>> SaveImagesAsync(IEnumerable<IFormFile> images);
+	Task<List<string>> SaveImagesAsync(IEnumerable<byte[]> bytesArrays);
 
 	Task<byte[]> LoadBytesAsync(string name);
 
@@ -15,4 +15,6 @@ public interface IImageService {
 	void DeleteImagesIfExists(IEnumerable<string> images);
 
 	string ImagesDir { get; }
+
+	void CreateWorkingDirectoryIfNotExists();
 }

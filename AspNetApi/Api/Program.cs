@@ -17,13 +17,11 @@ using StackExchange.Redis;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var assemblyName = AssemblyService.GetAssemblyName();
-
 builder.Services.AddDbContext<DataContext>(
 	options => {
 		options.UseNpgsql(
 			builder.Configuration.GetConnectionString("Npgsql"),
-			npgsqlOptions => npgsqlOptions.MigrationsAssembly(assemblyName)
+			npgsqlOptions => npgsqlOptions.MigrationsAssembly(AssemblyService.GetAssemblyName())
 		);
 
 		if (builder.Environment.IsDevelopment()) {
@@ -75,23 +73,20 @@ if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docke
 	app.UseSwaggerUI();
 }
 
-string imagesDirPath = app.Services.GetRequiredService<IImageService>().ImagesDir;
-
-if (!Directory.Exists(imagesDirPath)) {
-	Directory.CreateDirectory(imagesDirPath);
-}
-
-app.UseStaticFiles(new StaticFileOptions {
-	FileProvider = new PhysicalFileProvider(imagesDirPath),
-	RequestPath = "/images"
-});
-
 app.UseCors(
 	configuration => configuration
 		.AllowAnyOrigin()
 		.AllowAnyHeader()
 		.AllowAnyMethod()
 );
+
+var imageService = app.Services.GetRequiredService<IImageService>();
+imageService.CreateWorkingDirectoryIfNotExists();
+
+app.UseStaticFiles(new StaticFileOptions {
+	FileProvider = new PhysicalFileProvider(imageService.ImagesDir),
+	RequestPath = "/images"
+});
 
 app.UseAuthorization();
 
