@@ -68,6 +68,8 @@ builder.Services.AddTransient<IPaginationService<PizzaVm, PizzaFilterVm>, Pizzas
 builder.Services.AddTransient<ISizesControllerService, SizesControllerService>();
 builder.Services.AddTransient<IPaginationService<SizeVm, SizeFilterVm>, SizesPaginationService>();
 
+builder.Services.AddTransient<IPizzaSizesControllerService, PizzaSizesControllerService>();
+
 
 var app = builder.Build();
 
