@@ -10,4 +10,6 @@ public interface IExistingEntityCheckerService {
 	Task<bool> IsExistsPizzaIdAsync(long id, CancellationToken cancellationToken);
 
 	Task<bool> IsExistsSizeIdAsync(long id, CancellationToken cancellationToken);
+
+	Task<bool> IsExistsPizzaSizeKeyAsync(long pizzaId, long sizeId, CancellationToken cancellationToken);
 }

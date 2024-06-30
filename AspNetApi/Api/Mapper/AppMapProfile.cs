@@ -63,6 +63,8 @@ public class AppMapProfile : Profile {
 
 	private void PizzaSize() {
 		CreateMap<PizzaSize, PizzaSizeShortVm>();
+		CreateMap<CreatePizzaSizeVm, PizzaSize>();
+		CreateMap<UpdatePizzaSizeVm, PizzaSize>();
 	}
 
 	private void Size() {
