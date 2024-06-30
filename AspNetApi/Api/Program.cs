@@ -1,3 +1,4 @@
+using Api.Configurations;
 using Api.Mapper;
 using Api.Services;
 using Api.Services.ControllerServices;
@@ -38,6 +39,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+builder.Services.Configure<CacheExpirySeconds>(builder.Configuration.GetSection("CacheExpirySeconds"));
+
 builder.Services.AddAutoMapper(typeof(AppMapProfile));
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddSingleton<IConnectionMultiplexer>(
@@ -62,6 +65,7 @@ builder.Services.AddTransient<IPaginationService<IngredientVm, IngredientFilterV
 
 builder.Services.AddTransient<IPizzasControllerService, PizzasControllerService>();
 builder.Services.AddTransient<IPaginationService<PizzaVm, PizzaFilterVm>, PizzasPaginationService>();
+
 
 var app = builder.Build();
 

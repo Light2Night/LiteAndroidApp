@@ -1,4 +1,5 @@
-﻿using Api.Controllers;
+﻿using Api.Configurations;
+using Api.Controllers;
 using Api.DataTransferObjects;
 using Api.Services.ControllerServices.Interfaces;
 using Api.Services.Interfaces;
@@ -7,6 +8,7 @@ using Api.ViewModels.Pagination;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Model.Context;
 using Model.Entities;
 
@@ -17,8 +19,10 @@ public class IngredientsControllerService(
 	IMapper mapper,
 	IImageService imageService,
 	ICacheService cacheService,
-	IPaginationService<IngredientVm, IngredientFilterVm> pagination
+	IPaginationService<IngredientVm, IngredientFilterVm> pagination,
+	IOptions<CacheExpirySeconds> options
 ) : IIngredientsControllerService {
+	private readonly int _cacheExpirySeconds = options.Value.IngredientsController;
 
 	public async Task<IEnumerable<IngredientVm>> GetAllAsync() {
 		var action = new ActionDto(
@@ -33,7 +37,7 @@ public class IngredientsControllerService(
 			.ProjectTo<IngredientVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
-		await cacheService.SetCacheAsync(action, entities, TimeSpan.FromHours(1));
+		await cacheService.SetCacheAsync(action, entities, TimeSpan.FromSeconds(_cacheExpirySeconds));
 
 		return entities;
 	}
@@ -49,7 +53,7 @@ public class IngredientsControllerService(
 
 		var page = await pagination.GetPageAsync(vm);
 
-		await cacheService.SetCacheAsync(action, vm, page, TimeSpan.FromHours(1));
+		await cacheService.SetCacheAsync(action, vm, page, TimeSpan.FromSeconds(_cacheExpirySeconds));
 
 		return page;
 	}
@@ -67,7 +71,7 @@ public class IngredientsControllerService(
 			.ProjectTo<IngredientVm>(mapper.ConfigurationProvider)
 			.FirstOrDefaultAsync(x => x.Id == id);
 
-		await cacheService.SetCacheAsync(action, id, entity, TimeSpan.FromHours(1));
+		await cacheService.SetCacheAsync(action, id, entity, TimeSpan.FromSeconds(_cacheExpirySeconds));
 
 		return entity;
 	}

@@ -1,4 +1,5 @@
-﻿using Api.Controllers;
+﻿using Api.Configurations;
+using Api.Controllers;
 using Api.DataTransferObjects;
 using Api.Services.ControllerServices.Interfaces;
 using Api.Services.Interfaces;
@@ -7,6 +8,7 @@ using Api.ViewModels.Pizza;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Model.Context;
 using Model.Entities;
 
@@ -17,8 +19,10 @@ public class PizzasControllerService(
 	IMapper mapper,
 	IImageService imageService,
 	ICacheService cacheService,
-	IPaginationService<PizzaVm, PizzaFilterVm> pagination
+	IPaginationService<PizzaVm, PizzaFilterVm> pagination,
+	IOptions<CacheExpirySeconds> options
 ) : IPizzasControllerService {
+	private readonly int _cacheExpirySeconds = options.Value.PizzasController;
 
 	public async Task<IEnumerable<PizzaVm>> GetAllAsync() {
 		var action = new ActionDto(
@@ -33,7 +37,7 @@ public class PizzasControllerService(
 			.ProjectTo<PizzaVm>(mapper.ConfigurationProvider)
 			.ToArrayAsync();
 
-		await cacheService.SetCacheAsync(action, entities, TimeSpan.FromHours(1));
+		await cacheService.SetCacheAsync(action, entities, TimeSpan.FromSeconds(_cacheExpirySeconds));
 
 		return entities;
 	}
@@ -49,7 +53,7 @@ public class PizzasControllerService(
 
 		var page = await pagination.GetPageAsync(vm);
 
-		await cacheService.SetCacheAsync(action, vm, page, TimeSpan.FromHours(1));
+		await cacheService.SetCacheAsync(action, vm, page, TimeSpan.FromSeconds(_cacheExpirySeconds));
 
 		return page;
 	}
@@ -67,7 +71,7 @@ public class PizzasControllerService(
 			.ProjectTo<PizzaVm>(mapper.ConfigurationProvider)
 			.FirstOrDefaultAsync(x => x.Id == id);
 
-		await cacheService.SetCacheAsync(action, id, entity, TimeSpan.FromHours(1));
+		await cacheService.SetCacheAsync(action, id, entity, TimeSpan.FromSeconds(_cacheExpirySeconds));
 
 		return entity;
 	}
