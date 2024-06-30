@@ -3,6 +3,7 @@ using Api.ViewModels.Ingredient;
 using Api.ViewModels.Pizza;
 using Api.ViewModels.PizzaImage;
 using Api.ViewModels.PizzaSize;
+using Api.ViewModels.Size;
 using AutoMapper;
 using Model.Entities;
 
@@ -16,6 +17,7 @@ public class AppMapProfile : Profile {
 		Pizza();
 		PizzaImage();
 		PizzaSize();
+		Size();
 	}
 
 	private void Category() {
@@ -60,10 +62,11 @@ public class AppMapProfile : Profile {
 	}
 
 	private void PizzaSize() {
-		CreateMap<PizzaSize, PizzaSizeShortVm>()
-			.ForMember(
-				ps => ps.SizeName,
-				opt => opt.MapFrom(src => src.Size.Name)
-			);
+		CreateMap<PizzaSize, PizzaSizeShortVm>();
+	}
+
+	private void Size() {
+		CreateMap<Size, SizeVm>();
+		CreateMap<CreateSizeVm, Size>();
 	}
 }

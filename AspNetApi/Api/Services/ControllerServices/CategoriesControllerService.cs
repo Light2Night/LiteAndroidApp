@@ -128,7 +128,9 @@ public class CategoriesControllerService(
 
 		context.Categories.Remove(entity);
 		await context.SaveChangesAsync();
+
 		await cacheService.DeleteCacheByControllerAsync(ControllerName);
+		await cacheService.DeleteCacheByControllerAsync(nameof(PizzasController));
 
 		imageService.DeleteImagesIfExists(imagesForDelete.Append(entity.Image));
 	}

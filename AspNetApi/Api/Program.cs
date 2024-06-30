@@ -8,6 +8,7 @@ using Api.Services.PaginationServices;
 using Api.ViewModels.Category;
 using Api.ViewModels.Ingredient;
 using Api.ViewModels.Pizza;
+using Api.ViewModels.Size;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -63,6 +64,9 @@ builder.Services.AddTransient<IPaginationService<IngredientVm, IngredientFilterV
 
 builder.Services.AddTransient<IPizzasControllerService, PizzasControllerService>();
 builder.Services.AddTransient<IPaginationService<PizzaVm, PizzaFilterVm>, PizzasPaginationService>();
+
+builder.Services.AddTransient<ISizesControllerService, SizesControllerService>();
+builder.Services.AddTransient<IPaginationService<SizeVm, SizeFilterVm>, SizesPaginationService>();
 
 
 var app = builder.Build();

@@ -103,6 +103,7 @@ public class IngredientsControllerService(
 		try {
 			await context.SaveChangesAsync();
 			await cacheService.DeleteCacheByControllerAsync(ControllerName);
+			await cacheService.DeleteCacheByControllerAsync(nameof(PizzasController));
 
 			imageService.DeleteImageIfExists(oldImage);
 		}
@@ -121,6 +122,7 @@ public class IngredientsControllerService(
 		context.Ingredients.Remove(entity);
 		await context.SaveChangesAsync();
 		await cacheService.DeleteCacheByControllerAsync(ControllerName);
+		await cacheService.DeleteCacheByControllerAsync(nameof(PizzasController));
 
 		imageService.DeleteImageIfExists(entity.Image);
 	}

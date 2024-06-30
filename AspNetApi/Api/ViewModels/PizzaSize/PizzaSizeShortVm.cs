@@ -1,7 +1,9 @@
-﻿namespace Api.ViewModels.PizzaSize;
+﻿using Api.ViewModels.Size;
+
+namespace Api.ViewModels.PizzaSize;
 
 public class PizzaSizeShortVm {
-	public string SizeName { get; set; } = null!;
+	public SizeVm Size { get; set; } = null!;
 
 	public decimal Price { get; set; }
 }
