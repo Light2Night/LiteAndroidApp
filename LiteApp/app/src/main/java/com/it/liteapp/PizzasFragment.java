@@ -58,7 +58,7 @@ public class PizzasFragment extends Fragment {
             RetrofitClient
                     .getInstance()
                     .getPizzasApi()
-                    .page()
+                    .page(Long.parseLong(categoryId))
                     .enqueue(new Callback<PizzasPageDTO>() {
                         @Override
                         public void onResponse(Call<PizzasPageDTO> call, Response<PizzasPageDTO> response) {
