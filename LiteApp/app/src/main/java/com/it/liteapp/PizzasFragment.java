@@ -18,6 +18,8 @@ import com.it.liteapp.dto.CategoryItemDTO;
 import com.it.liteapp.dto.PizzasPageDTO;
 import com.it.liteapp.network.RetrofitClient;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -61,14 +63,15 @@ public class PizzasFragment extends Fragment {
                     .page(Long.parseLong(categoryId))
                     .enqueue(new Callback<PizzasPageDTO>() {
                         @Override
-                        public void onResponse(Call<PizzasPageDTO> call, Response<PizzasPageDTO> response) {
+                        public void onResponse(@NotNull Call<PizzasPageDTO> call, @NotNull Response<PizzasPageDTO> response) {
                             PizzasPageDTO item = response.body();
+                            assert item != null;
                             PizzasAdapter pa = new PizzasAdapter(item.getData());
                             rcPizzas.setAdapter(pa);
                         }
 
                         @Override
-                        public void onFailure(Call<PizzasPageDTO> call, Throwable throwable) {
+                        public void onFailure(@NotNull Call<PizzasPageDTO> call, @NotNull Throwable throwable) {
 
                         }
                     });

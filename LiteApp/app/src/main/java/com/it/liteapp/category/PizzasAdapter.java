@@ -6,10 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.it.liteapp.PizzaFragment;
 import com.it.liteapp.R;
 import com.it.liteapp.config.Config;
 import com.it.liteapp.dto.PizzaItemDTO;
@@ -17,7 +20,7 @@ import com.it.liteapp.dto.PizzaItemDTO;
 import java.util.List;
 
 public class PizzasAdapter extends RecyclerView.Adapter<PizzaCardViewHolder> {
-    private List<PizzaItemDTO> items;
+    private final List<PizzaItemDTO> items;
     private Context context;
 
     public PizzasAdapter(List<PizzaItemDTO> items) {
@@ -49,16 +52,16 @@ public class PizzasAdapter extends RecyclerView.Adapter<PizzaCardViewHolder> {
                     .skipMemoryCache(true)
                     .into(holder.getIvPizzaImage());
 
-//            holder.itemView.setOnClickListener(v -> {
-//                if (context instanceof FragmentActivity) {
-//                    FragmentActivity activity = (FragmentActivity) context;
-//                    Fragment productsFragment = PizzasFragment.newInstance(String.valueOf(item.getId()));
-//                    activity.getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.fragment_container, productsFragment)
-//                            .addToBackStack(null)
-//                            .commit();
-//                }
-//            });
+            holder.itemView.setOnClickListener(v -> {
+                if (context instanceof FragmentActivity) {
+                    FragmentActivity activity = (FragmentActivity) context;
+                    Fragment productsFragment = PizzaFragment.newInstance(String.valueOf(item.getId()));
+                    activity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, productsFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
         }
     }
 
