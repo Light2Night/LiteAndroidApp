@@ -64,6 +64,13 @@
             android:textSize="16sp" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/pizza_sizes_placeholder"
+            android:textSize="16sp" />
+
+        <TextView
             android:id="@+id/pizza_sizes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
