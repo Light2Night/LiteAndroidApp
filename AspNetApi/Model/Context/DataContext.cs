@@ -1,10 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Model.Entities;
+using Model.Entities.Identity;
 using Model.EntityTypeConfigurations;
+using Model.EntityTypeConfigurations.Identity;
 
 namespace Model.Context;
 
-public class DataContext(DbContextOptions<DataContext> options) : DbContext(options) {
+public class DataContext(DbContextOptions<DataContext> options)
+	: IdentityDbContext<
+		User,
+		Role,
+		long,
+		IdentityUserClaim<long>,
+		UserRole,
+		IdentityUserLogin<long>,
+		IdentityRoleClaim<long>,
+		IdentityUserToken<long>
+	>(options) {
+
 	public DbSet<Category> Categories { get; set; }
 	public DbSet<Pizza> Pizzas { get; set; }
 	public DbSet<PizzaImage> PizzaImages { get; set; }
@@ -15,6 +30,9 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder) {
 		base.OnModelCreating(modelBuilder);
+
+		new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<User>());
+		new UserRoleEntityTypeConfiguration().Configure(modelBuilder.Entity<UserRole>());
 
 		new CategoryEntityTypeConfiguration().Configure(modelBuilder.Entity<Category>());
 		new PizzaEntityTypeConfiguration().Configure(modelBuilder.Entity<Pizza>());
