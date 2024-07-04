@@ -115,11 +115,15 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(
 );
 
 builder.Services.AddScoped<IMigrationService, MigrationService>();
+builder.Services.AddScoped<IIdentitySeeder, IdentitySeeder>();
 
 builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddTransient<IImageValidator, ImageValidator>();
 builder.Services.AddTransient<IExistingEntityCheckerService, ExistingEntityCheckerService>();
 builder.Services.AddScoped<ICacheService, RedisCacheService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+builder.Services.AddTransient<IAccountsControllerService, AccountsControllerService>();
 
 builder.Services.AddTransient<ICategoriesControllerService, CategoriesControllerService>();
 builder.Services.AddTransient<IPaginationService<CategoryVm, CategoryFilterVm>, CategoriesPaginationService>();
@@ -165,6 +169,7 @@ app.MapControllers();
 
 await using (var scope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateAsyncScope()) {
 	await scope.ServiceProvider.GetRequiredService<IMigrationService>().MigrateLatestAsync();
+	await scope.ServiceProvider.GetRequiredService<IIdentitySeeder>().SeedAsync();
 }
 
 app.Run();

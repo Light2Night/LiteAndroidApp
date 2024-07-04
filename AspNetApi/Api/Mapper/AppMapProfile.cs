@@ -1,4 +1,5 @@
-﻿using Api.ViewModels.Category;
+﻿using Api.ViewModels.Account;
+using Api.ViewModels.Category;
 using Api.ViewModels.Ingredient;
 using Api.ViewModels.Pizza;
 using Api.ViewModels.PizzaImage;
@@ -6,11 +7,14 @@ using Api.ViewModels.PizzaSize;
 using Api.ViewModels.Size;
 using AutoMapper;
 using Model.Entities;
+using Model.Entities.Identity;
+using System.Security.Principal;
 
 namespace Api.Mapper;
 
 public class AppMapProfile : Profile {
 	public AppMapProfile() {
+		Account();
 		Category();
 		Ingredient();
 		PizzaIngredient();
@@ -18,6 +22,10 @@ public class AppMapProfile : Profile {
 		PizzaImage();
 		PizzaSize();
 		Size();
+	}
+
+	private void Account() {
+		CreateMap<RegisterVm, User>();
 	}
 
 	private void Category() {
