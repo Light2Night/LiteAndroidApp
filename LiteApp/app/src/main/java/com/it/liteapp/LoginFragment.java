@@ -2,13 +2,14 @@ package com.it.liteapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.it.liteapp.application.HomeApplication;
@@ -16,7 +17,6 @@ import com.it.liteapp.dto.JwtTokenResponseDTO;
 import com.it.liteapp.network.RetrofitClient;
 import com.it.liteapp.security.JwtSecurityService;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -27,6 +27,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     Button button;
     TextInputEditText emailInput;
     TextInputEditText passwordInput;
+    TextView errorText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         button.setOnClickListener(this);
         emailInput = view.findViewById(R.id.login_email_input);
         passwordInput = view.findViewById(R.id.login_password_input);
+        errorText = view.findViewById(R.id.login_error);
 
         return view;
     }
@@ -45,32 +47,40 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         String email = Objects.requireNonNull(emailInput.getText()).toString();
         String password = Objects.requireNonNull(passwordInput.getText()).toString();
 
+        Callback<JwtTokenResponseDTO> callback = new Callback<JwtTokenResponseDTO>() {
+            @Override
+            public void onResponse(@NonNull Call<JwtTokenResponseDTO> call, @NonNull Response<JwtTokenResponseDTO> response) {
+                if (response.isSuccessful()) {
+                    JwtTokenResponseDTO result = response.body();
+                    JwtSecurityService jwt = HomeApplication.getInstance();
+                    assert result != null;
+                    jwt.saveJwtToken(result.getToken());
+
+                    return;
+                }
+
+                int code = response.code();
+
+                if (code == 401)
+                    showError("Incorrect email or password");
+                else
+                    showError("Invalid data");
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JwtTokenResponseDTO> call, @NonNull Throwable throwable) {
+                showError("Request failed");
+            }
+        };
+
         RetrofitClient.getInstance()
                 .getAccountsApi()
                 .signIn(email, password)
-                .enqueue(new Callback<JwtTokenResponseDTO>() {
-                    @Override
-                    public void onResponse(Call<JwtTokenResponseDTO> call, Response<JwtTokenResponseDTO> response) {
-                        if (response.isSuccessful()) {
-                            JwtTokenResponseDTO result = response.body();
-                            JwtSecurityService jwt = HomeApplication.getInstance();
-                            assert result != null;
-                            jwt.saveJwtToken(result.getToken());
-                            Log.d("API onResponse", "Success: " + result.getToken());
-                        } else {
-                            try {
-                                String errorBody = response.errorBody().string();
-                                Log.e("API Error", "Error: " + errorBody);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+                .enqueue(callback);
+    }
 
-                    @Override
-                    public void onFailure(Call<JwtTokenResponseDTO> call, Throwable throwable) {
-                        Log.e("API onFailure", "Error: " + throwable.getMessage());
-                    }
-                });
+    private void showError(String errorMessage) {
+        errorText.setText(errorMessage);
+        errorText.setVisibility(View.VISIBLE);
     }
 }
