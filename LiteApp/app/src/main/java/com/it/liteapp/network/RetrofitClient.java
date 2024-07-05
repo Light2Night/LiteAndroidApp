@@ -30,4 +30,8 @@ public class RetrofitClient {
     public PizzasApi getPizzasApi() {
         return retrofit.create(PizzasApi.class);
     }
+
+    public AccountsApi getAccountsApi() {
+        return retrofit.create(AccountsApi.class);
+    }
 }
