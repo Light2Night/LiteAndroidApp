@@ -9,6 +9,8 @@ import com.it.liteapp.security.JwtSecurityService;
 public class HomeApplication extends Application implements JwtSecurityService {
     private static HomeApplication instance;
     private static Context appContext;
+    private static final String PREFERENCE_NAME = "jwtStore";
+    private static final String KEY_NAME = "token";
 
     @Override
     public void onCreate() {
@@ -29,20 +31,20 @@ public class HomeApplication extends Application implements JwtSecurityService {
     public void saveJwtToken(String token) {
         SharedPreferences prefs;
         SharedPreferences.Editor edit;
-        prefs = instance.getSharedPreferences("jwtStore", MODE_PRIVATE);
+
+        prefs = instance.getSharedPreferences(PREFERENCE_NAME, MODE_PRIVATE);
         edit = prefs.edit();
-        try {
-            edit.putString("token", token);
-            edit.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        edit.putString(KEY_NAME, token);
+        edit.apply();
     }
 
     @Override
     public String getToken() {
-        SharedPreferences prefs = instance.getSharedPreferences("jwtStore", Context.MODE_PRIVATE);
-        String token = prefs.getString("token", "");
+        SharedPreferences prefs = instance.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+
+        String token = prefs.getString(KEY_NAME, "");
+
         return token;
     }
 
@@ -50,21 +52,16 @@ public class HomeApplication extends Application implements JwtSecurityService {
     public void deleteToken() {
         SharedPreferences prefs;
         SharedPreferences.Editor edit;
-        prefs = instance.getSharedPreferences("jwtStore", Context.MODE_PRIVATE);
+
+        prefs = instance.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         edit = prefs.edit();
-        try {
-            edit.remove("token");
-            edit.apply();
-            edit.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        edit.remove(KEY_NAME);
+        edit.apply();
     }
 
     @Override
     public boolean isAuth() {
-        if (getToken().equals(""))
-            return false;
-        return true;
+        return !getToken().isEmpty();
     }
 }

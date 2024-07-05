@@ -47,8 +47,6 @@ public class AuthorizationActivity extends AppCompatActivity {
     }
 
     public void signIn() {
-        HomeApplication.getInstance().deleteToken();
-
         Intent intent = new Intent(this, MainActivity.class);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
