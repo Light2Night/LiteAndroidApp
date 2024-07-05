@@ -23,18 +23,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginFragment extends Fragment implements View.OnClickListener {
-    Button button;
-    TextInputEditText emailInput;
-    TextInputEditText passwordInput;
-    TextView errorText;
+public class LoginFragment extends Fragment {
+    private TextInputEditText emailInput;
+    private TextInputEditText passwordInput;
+    private TextView errorText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        button = view.findViewById(R.id.login_button);
-        button.setOnClickListener(this);
+        Button button = view.findViewById(R.id.login_button);
+        button.setOnClickListener(this::onClickSignIn);
         emailInput = view.findViewById(R.id.login_email_input);
         passwordInput = view.findViewById(R.id.login_password_input);
         errorText = view.findViewById(R.id.login_error);
@@ -42,8 +41,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
+    public void onClickSignIn(View v) {
         String email = Objects.requireNonNull(emailInput.getText()).toString();
         String password = Objects.requireNonNull(passwordInput.getText()).toString();
 
@@ -56,6 +54,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     assert result != null;
                     jwt.saveJwtToken(result.getToken());
 
+                    signIn();
                     return;
                 }
 
@@ -82,5 +81,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void showError(String errorMessage) {
         errorText.setText(errorMessage);
         errorText.setVisibility(View.VISIBLE);
+    }
+
+    public void signIn() {
+        if (getActivity() instanceof AuthorizationActivity) {
+            ((AuthorizationActivity) getActivity()).signIn();
+        }
     }
 }

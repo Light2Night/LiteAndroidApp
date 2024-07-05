@@ -1,15 +1,13 @@
 package com.it.liteapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.it.liteapp.application.HomeApplication;
 
 public class AuthorizationActivity extends AppCompatActivity {
     @Override
@@ -35,7 +33,7 @@ public class AuthorizationActivity extends AppCompatActivity {
     }
 
     private void SetFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.authorization_fragment_container, fragment).commit();
     }
 
     private Fragment GetFragmentById(int id) {
@@ -46,5 +44,16 @@ public class AuthorizationActivity extends AppCompatActivity {
         }
 
         return null;
+    }
+
+    public void signIn() {
+        HomeApplication.getInstance().deleteToken();
+
+        Intent intent = new Intent(this, MainActivity.class);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(intent);
+        finish();
     }
 }

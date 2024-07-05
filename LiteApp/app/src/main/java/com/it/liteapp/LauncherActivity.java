@@ -22,7 +22,7 @@ public class LauncherActivity extends AppCompatActivity {
         if (application.isAuth()) {
             return new Intent(this, MainActivity.class);
         } else {
-            return new Intent(this, LoginFragment.class);
+            return new Intent(this, AuthorizationActivity.class);
         }
     }
 }

@@ -37,10 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private Fragment GetFragmentById(int id) {
         if (id == R.id.m_home) {
             return new HomeFragment();
-        } else if (id == R.id.m_login) {
-            return new LoginFragment();
-        } else if (id == R.id.m_register) {
-            return new RegistrationFragment();
+        } else if (id == R.id.m_account) {
+            return new AccountFragment();
         }
 
         return null;

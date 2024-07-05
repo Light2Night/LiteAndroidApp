@@ -17,6 +17,8 @@
     <string name="menu_home">Головна</string>
     <string name="menu_login">Вхід</string>
     <string name="menu_register">Реєстрація</string>
+    <string name="menu_account">Акаунт</string>
+    <string name="pizzas_header">Піци</string>
     <string name="pizza_image_desc">Фото піци</string>
     <string name="pizza_name_placeholder">Назва піци</string>
     <string name="pizza_description_placeholder">Опис: %s</string>
@@ -26,4 +28,5 @@
     <string name="pizza_sizes_placeholder">Розміри:</string>
     <string name="available">Є у наявності</string>
     <string name="not_available">Немає у наявності</string>
+    <string name="logout">Вийти</string>
 </resources>
