@@ -41,7 +41,7 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    public void onClickSignIn(View v) {
+    private void onClickSignIn(View v) {
         String email = Objects.requireNonNull(emailInput.getText()).toString();
         String password = Objects.requireNonNull(passwordInput.getText()).toString();
 
@@ -83,7 +83,7 @@ public class LoginFragment extends Fragment {
         errorText.setVisibility(View.VISIBLE);
     }
 
-    public void signIn() {
+    private void signIn() {
         if (getActivity() instanceof AuthorizationActivity) {
             ((AuthorizationActivity) getActivity()).signIn();
         }
