@@ -17,7 +17,7 @@ public class AccountsController(
 	IJwtTokenService jwtTokenService,
 	IValidator<RegisterVm> registerValidator,
 	IAccountsControllerService service
-	) : ControllerBase {
+) : ControllerBase {
 
 	[HttpPost]
 	public async Task<IActionResult> SignIn([FromForm] SignInVm model) {

@@ -4,12 +4,13 @@ import React, {useEffect, useState} from "react";
 import ICategory from "@/app/interfaces/ICategory";
 import {FlatList, View, Text} from "react-native";
 import axios from "axios";
+import {getActionUrl, getImageUrl} from "@/app/apiHelper";
 
 export default function CategoriesScreen() {
     const [categories, setCategories] = useState<ICategory[]>([]);
 
     useEffect(() => {
-        axios.get("http://lite.novakv.com:5100/api/categories/getall")
+        axios.get(getActionUrl("categories", "getall"))
             .then(list => setCategories(list.data))
             .catch(error => console.log(error));
     }, []);
@@ -24,7 +25,7 @@ export default function CategoriesScreen() {
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({item}) => (
                         <View style={styles.categoryContainer}>
-                            <Image source={{uri: "http://lite.novakv.com:5100/images/1200_" + item.image}}
+                            <Image source={{uri: getImageUrl(item.image, 1200)}}
                                    style={styles.image}/>
                             <Text style={styles.name}>{item.name}</Text>
                         </View>

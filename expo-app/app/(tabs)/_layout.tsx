@@ -4,6 +4,7 @@ import React from 'react';
 import {TabBarIcon} from '@/components/navigation/TabBarIcon';
 import {Colors} from '@/constants/Colors';
 import {useColorScheme} from '@/hooks/useColorScheme';
+import {Entypo} from "@expo/vector-icons";
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
@@ -38,6 +39,15 @@ export default function TabLayout() {
                     title: 'Categories',
                     tabBarIcon: ({color, focused}) => (
                         <TabBarIcon name={focused ? 'list' : 'list-outline'} color={color}/>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="login"
+                options={{
+                    title: 'Login',
+                    tabBarIcon: ({color, focused}) => (
+                        <Entypo name="login" size={24} color={color}/>
                     ),
                 }}
             />
