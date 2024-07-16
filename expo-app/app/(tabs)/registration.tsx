@@ -5,10 +5,11 @@ import {getActionUrl} from "@/app/apiHelper";
 import IJwtTokenResponse from "@/app/interfaces/IJwtTokenResponse";
 import * as ImagePicker from 'expo-image-picker';
 import Spacer from "@/app/Components/Spacer";
+import {getFileFromUriAsync} from "@/utils/getFileFromUri";
 
 export default function RegistrationScreen() {
     const [email, setEmail] = useState('');
-    const [login, setLogin] = useState('');
+    const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
     const [firstName, setFirstName] = useState('');
@@ -16,25 +17,34 @@ export default function RegistrationScreen() {
     const [imageUri, setImageUri] = useState<string | undefined>(undefined);
     const [error, setError] = useState('');
 
-    const handleRegistration = () => {
-        // const form = new FormData();
-        //
-        // form.append('email', email);
-        // form.append('password', password);
-        //
-        // axios.postForm<IJwtTokenResponse>(getActionUrl('accounts', 'signin'), form)
-        //     .then(response => {
-        //         setError('');
-        //
-        //         console.log(response.data.token);
-        //     })
-        //     .catch(error => {
-        //         if (error.response.status === 401) {
-        //             setError('Invalid email or password');
-        //         } else {
-        //             setError('Error');
-        //         }
-        //     });
+    const handleRegistrationAsync = async () => {
+        if (password !== repeatPassword) {
+            setError('Паролі не співпадають');
+            return;
+        }
+
+        const imageFile = await getFileFromUriAsync(imageUri!);
+
+        const form = new FormData();
+        form.append('email', email);
+        form.append('userName', userName);
+        form.append('password', password);
+        form.append('firstName', firstName);
+        form.append('lastName', lastName);
+        // @ts-ignore
+        form.append("image", imageFile);
+
+        axios.postForm<IJwtTokenResponse>(getActionUrl('accounts', 'registration'), form)
+            .then(response => {
+                setError('');
+
+                console.log(response.data.token);
+            })
+            .catch(error => {
+                if (error.response.status === 400) {
+                    setError('Error');
+                }
+            });
     }
 
     const pickImage = async () => {
@@ -50,7 +60,7 @@ export default function RegistrationScreen() {
         });
 
         if (!result.canceled) {
-            setImageUri(result.assets[0].uri)
+            setImageUri(result.assets[0].uri);
         }
     };
 
@@ -72,8 +82,8 @@ export default function RegistrationScreen() {
 
                     <Text style={styles.title}>Логін</Text>
                     <TextInput
-                        value={login}
-                        onChangeText={setLogin}
+                        value={userName}
+                        onChangeText={setUserName}
                         autoCapitalize="none"
                         keyboardType="default"
                         style={styles.input}
@@ -99,7 +109,6 @@ export default function RegistrationScreen() {
                     <TextInput
                         value={firstName}
                         onChangeText={setFirstName}
-                        secureTextEntry
                         style={styles.input}
                     />
 
@@ -107,7 +116,6 @@ export default function RegistrationScreen() {
                     <TextInput
                         value={lastName}
                         onChangeText={setLastName}
-                        secureTextEntry
                         style={styles.input}
                     />
 
@@ -120,7 +128,7 @@ export default function RegistrationScreen() {
 
                     <Button
                         title="Зареєструватися"
-                        onPress={handleRegistration}
+                        onPress={handleRegistrationAsync}
                     />
                 </View>
             </ScrollView>
