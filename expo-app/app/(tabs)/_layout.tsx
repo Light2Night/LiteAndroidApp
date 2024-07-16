@@ -36,7 +36,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="categories"
                 options={{
-                    title: 'Categories',
+                    title: 'Категорії',
                     tabBarIcon: ({color, focused}) => (
                         <TabBarIcon name={focused ? 'list' : 'list-outline'} color={color}/>
                     ),
@@ -45,9 +45,18 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="login"
                 options={{
-                    title: 'Login',
+                    title: 'Вхід',
                     tabBarIcon: ({color, focused}) => (
                         <Entypo name="login" size={24} color={color}/>
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="registration"
+                options={{
+                    title: 'Реєстрація',
+                    tabBarIcon: ({color, focused}) => (
+                        <Entypo name="add-user" size={24} color={color}/>
                     ),
                 }}
             />

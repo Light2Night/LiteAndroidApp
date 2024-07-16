@@ -36,7 +36,7 @@ export default function LoginScreen() {
                 <Text style={styles.header}>Вхід</Text>
                 {error ? <Text style={styles.error}>{error}</Text> : null}
 
-                <Text style={styles.title}>Логін</Text>
+                <Text style={styles.title}>Email</Text>
                 <TextInput
                     value={email}
                     onChangeText={setEmail}
@@ -54,7 +54,7 @@ export default function LoginScreen() {
                 />
 
                 <Button
-                    title="Sign In"
+                    title="Увійти"
                     onPress={handleSignIn}
                 />
             </View>
