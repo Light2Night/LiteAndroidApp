@@ -19,4 +19,6 @@ public class Pizza {
 	public ICollection<PizzaIngredient> Ingredients { get; set; } = null!;
 
 	public ICollection<PizzaSize> Sizes { get; set; } = null!;
+
+	public ICollection<PizzaSpecificationValue> SpecificationValues { get; set; } = null!;
 }

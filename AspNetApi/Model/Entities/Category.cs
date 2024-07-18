@@ -8,4 +8,6 @@ public class Category {
 	public string Image { get; set; } = null!;
 
 	public ICollection<Pizza> Pizzas { get; set; } = null!;
+
+	public ICollection<SpecificationName> SpecificationNames { get; set; } = null!;
 }
