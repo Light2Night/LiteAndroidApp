@@ -16,4 +16,6 @@ public class PizzaFilterVm : PaginationVm {
 	public long? CategoryId { get; set; }
 
 	public IEnumerable<long>? IngredientIds { get; set; }
+
+	public IEnumerable<long>? SpecificationValueIds { get; set; }
 }

@@ -43,6 +43,32 @@ public class PizzasPaginationService(
 				)
 			);
 
+		if (vm.SpecificationValueIds is not null) {
+			var searchedSpecificationNames = context.SpecificationNames
+				.Include(sn => sn.Values)
+				.Where(
+					sn => sn.Values
+						.Any(sv => vm.SpecificationValueIds.Contains(sv.Id))
+				)
+				.ToArray();
+
+			foreach (var specificationName in searchedSpecificationNames) {
+				var searchedSpecificationValueIds = vm.SpecificationValueIds
+					.Intersect(specificationName.Values.Select(sv => sv.Id))
+					.ToArray();
+
+				query = query
+					.Include(p => p.SpecificationValues)
+						.ThenInclude(psv => psv.SpecificationValue)
+							.ThenInclude(sv => sv.SpecificationName)
+					.Where(
+						p => p.SpecificationValues
+							.Select(psv => psv.SpecificationValueId)
+							.Any(svId => searchedSpecificationValueIds.Contains(svId))
+					);
+			}
+		}
+
 		return query;
 	}
 }
