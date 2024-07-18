@@ -5,10 +5,10 @@ using Api.ViewModels.Pizza;
 using Api.ViewModels.PizzaImage;
 using Api.ViewModels.PizzaSize;
 using Api.ViewModels.Size;
+using Api.ViewModels.SpecificationValue;
 using AutoMapper;
 using Model.Entities;
 using Model.Entities.Identity;
-using System.Security.Principal;
 
 namespace Api.Mapper;
 
@@ -22,6 +22,7 @@ public class AppMapProfile : Profile {
 		PizzaImage();
 		PizzaSize();
 		Size();
+		SpecificationValue();
 	}
 
 	private void Account() {
@@ -86,5 +87,14 @@ public class AppMapProfile : Profile {
 	private void Size() {
 		CreateMap<Size, SizeVm>();
 		CreateMap<CreateSizeVm, Size>();
+	}
+
+	private void SpecificationValue() {
+		CreateMap<SpecificationValue, SpecificationValueVm>();
+		CreateMap<PizzaSpecificationValue, SpecificationValueVm>()
+			.ForMember(sv => sv.Id, opt => opt.MapFrom(src => src.SpecificationValueId))
+			.ForMember(sv => sv.Value, opt => opt.MapFrom(src => src.SpecificationValue.Value))
+			.ForMember(sv => sv.SpecificationNameId, opt => opt.MapFrom(src => src.SpecificationValue.SpecificationNameId)
+		);
 	}
 }
