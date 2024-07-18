@@ -96,6 +96,7 @@ public class PizzasControllerService(
 		var entity = await context.Pizzas
 			.Include(p => p.Images)
 			.Include(p => p.Ingredients)
+			.Include(p => p.SpecificationValues)
 			.FirstAsync(x => x.Id == vm.Id);
 
 		var oldImages = entity.Images
@@ -118,6 +119,15 @@ public class PizzasControllerService(
 				entity.Ingredients.Add(new PizzaIngredient {
 					PizzaId = entity.Id,
 					IngredientId = ingredientId
+				});
+			}
+
+		entity.SpecificationValues.Clear();
+		if (vm.SpecificationValueIds is not null)
+			foreach (var ingredientId in vm.SpecificationValueIds) {
+				entity.SpecificationValues.Add(new PizzaSpecificationValue {
+					PizzaId = entity.Id,
+					SpecificationValueId = ingredientId
 				});
 			}
 

@@ -16,4 +16,6 @@ public class UpdatePizzaVm {
 	public IEnumerable<IFormFile> Images { get; set; } = null!;
 
 	public IEnumerable<long>? IngredientIds { get; set; }
+
+	public IEnumerable<long>? SpecificationValueIds { get; set; }
 }

@@ -18,7 +18,7 @@ public class ExistingEntityCheckerService(
 		var ingredientsFromDb = await context.Ingredients
 			.Where(i => ids.Contains(i.Id))
 			.Select(i => i.Id)
-			.ToArrayAsync();
+			.ToArrayAsync(cancellationToken);
 
 		return ids.All(id => ingredientsFromDb.Contains(id));
 	}
@@ -28,6 +28,25 @@ public class ExistingEntityCheckerService(
 			return true;
 
 		return await IsExistsIngredientIdsAsync(ids, cancellationToken);
+	}
+
+	public async Task<bool> IsExistsSpecificationValueIdAsync(long id, CancellationToken cancellationToken) =>
+		await context.SpecificationValues.AnyAsync(sv => sv.Id == id, cancellationToken);
+
+	public async Task<bool> IsExistsSpecificationValueIdsAsync(IEnumerable<long> ids, CancellationToken cancellationToken) {
+		var specificationValuesFromDb = await context.SpecificationValues
+			.Where(sv => ids.Contains(sv.Id))
+			.Select(sv => sv.Id)
+			.ToArrayAsync(cancellationToken);
+
+		return ids.All(id => specificationValuesFromDb.Contains(id));
+	}
+
+	public async Task<bool> IsExistsNullPossibleSpecificationValueIdsAsync(IEnumerable<long>? ids, CancellationToken cancellationToken) {
+		if (ids is null)
+			return true;
+
+		return await IsExistsSpecificationValueIdsAsync(ids, cancellationToken);
 	}
 
 	public async Task<bool> IsExistsPizzaIdAsync(long id, CancellationToken cancellationToken) =>

@@ -7,6 +7,10 @@ public interface IExistingEntityCheckerService {
 	Task<bool> IsExistsIngredientIdsAsync(IEnumerable<long> ids, CancellationToken cancellationToken);
 	Task<bool> IsExistsNullPossibleIngredientIdsAsync(IEnumerable<long>? ids, CancellationToken cancellationToken);
 
+	Task<bool> IsExistsSpecificationValueIdAsync(long id, CancellationToken cancellationToken);
+	Task<bool> IsExistsSpecificationValueIdsAsync(IEnumerable<long> ids, CancellationToken cancellationToken);
+	Task<bool> IsExistsNullPossibleSpecificationValueIdsAsync(IEnumerable<long>? ids, CancellationToken cancellationToken);
+
 	Task<bool> IsExistsPizzaIdAsync(long id, CancellationToken cancellationToken);
 
 	Task<bool> IsExistsSizeIdAsync(long id, CancellationToken cancellationToken);

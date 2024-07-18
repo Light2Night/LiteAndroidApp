@@ -33,5 +33,9 @@ public class CreatePizzaValidator : AbstractValidator<CreatePizzaVm> {
 		RuleFor(p => p.IngredientIds)
 			.MustAsync(existingEntityCheckerService.IsExistsNullPossibleIngredientIdsAsync)
 				.WithMessage("IngredientIds contains the Id of a non-existing element");
+
+		RuleFor(p => p.SpecificationValueIds)
+			.MustAsync(existingEntityCheckerService.IsExistsNullPossibleSpecificationValueIdsAsync)
+				.WithMessage("SpecificationValueIds contains the Id of a non-existing element");
 	}
 }

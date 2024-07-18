@@ -62,6 +62,14 @@ public class AppMapProfile : Profile {
 						.Select(id => new PizzaIngredient { Pizza = dest, IngredientId = id })
 						.ToArray()
 				)
+			)
+			.ForMember(
+				p => p.SpecificationValues,
+				opt => opt.MapFrom(
+					(src, dest) => (src.SpecificationValueIds ?? [])
+						.Select(id => new PizzaSpecificationValue { Pizza = dest, SpecificationValueId = id })
+						.ToArray()
+				)
 			);
 	}
 
