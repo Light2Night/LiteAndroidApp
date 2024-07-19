@@ -1,4 +1,5 @@
 using Api.Configurations;
+using Api.Extensions;
 using Api.Mapper;
 using Api.Services;
 using Api.Services.ControllerServices;
@@ -9,6 +10,7 @@ using Api.ViewModels.Category;
 using Api.ViewModels.Ingredient;
 using Api.ViewModels.Pizza;
 using Api.ViewModels.Size;
+using Api.ViewModels.SpecificationName;
 using Api.ViewModels.SpecificationValue;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -143,11 +145,14 @@ builder.Services.AddTransient<IPizzaSizesControllerService, PizzaSizesController
 builder.Services.AddTransient<ISpecificationValuesControllerService, SpecificationValuesControllerService>();
 builder.Services.AddTransient<IPaginationService<SpecificationValueVm, SpecificationValueFilterVm>, SpecificationValuesPaginationService>();
 
+builder.Services.AddTransient<ISpecificationNamesControllerService, SpecificationNamesControllerService>();
+builder.Services.AddTransient<IPaginationService<SpecificationNameVm, SpecificationNameFilterVm>, SpecificationNamesPaginationService>();
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Docker") {
+if (app.Environment.IsDevelopment() || app.Environment.IsDocker()) {
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
