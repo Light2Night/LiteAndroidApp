@@ -84,7 +84,7 @@ public class RedisCacheService(
 	public async Task DeleteCacheByArgumentAsync(ActionDto action, object argument) =>
 		await DeleteCacheByArgumentAsync(action.ControllerName, action.ActionName, argument);
 
-	public async Task ClearCache() {
+	public async Task ClearCacheAsync() {
 		foreach (var endpoint in connectionMultiplexer.GetEndPoints()) {
 			var server = connectionMultiplexer.GetServer(endpoint);
 

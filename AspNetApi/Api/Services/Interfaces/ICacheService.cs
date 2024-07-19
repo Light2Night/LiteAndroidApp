@@ -32,5 +32,5 @@ public interface ICacheService {
 	Task DeleteCacheByArgumentAsync(string controllerName, string actionName, object argument);
 	Task DeleteCacheByArgumentAsync(ActionDto action, object argument);
 
-	Task ClearCache();
+	Task ClearCacheAsync();
 }
