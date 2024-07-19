@@ -9,6 +9,7 @@ using Api.ViewModels.Category;
 using Api.ViewModels.Ingredient;
 using Api.ViewModels.Pizza;
 using Api.ViewModels.Size;
+using Api.ViewModels.SpecificationValue;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -138,6 +139,9 @@ builder.Services.AddTransient<ISizesControllerService, SizesControllerService>()
 builder.Services.AddTransient<IPaginationService<SizeVm, SizeFilterVm>, SizesPaginationService>();
 
 builder.Services.AddTransient<IPizzaSizesControllerService, PizzaSizesControllerService>();
+
+builder.Services.AddTransient<ISpecificationValuesControllerService, SpecificationValuesControllerService>();
+builder.Services.AddTransient<IPaginationService<SpecificationValueVm, SpecificationValueFilterVm>, SpecificationValuesPaginationService>();
 
 
 var app = builder.Build();

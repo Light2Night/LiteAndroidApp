@@ -1,5 +1,7 @@
 ﻿using Api.DataTransferObjects;
+using Api.Exceptions;
 using Api.Services.Interfaces;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -36,6 +38,19 @@ public class RedisCacheService(
 		await GetCacheAsync<T>(action.ControllerName, action.ActionName, argument);
 
 
+	public async Task<T?> TryGetCacheAsync<T>(string controllerName, string actionName) {
+		return await TryGetCacheByKeyAsync<T>(CreateKey(controllerName, actionName));
+	}
+	public async Task<T?> TryGetCacheAsync<T>(ActionDto action) =>
+		await TryGetCacheAsync<T>(action.ControllerName, action.ActionName);
+
+	public async Task<T?> TryGetCacheAsync<T>(string controllerName, string actionName, object argument) {
+		return await TryGetCacheByKeyAsync<T>(CreateKey(controllerName, actionName, argument));
+	}
+	public async Task<T?> TryGetCacheAsync<T>(ActionDto action, object argument) =>
+		await TryGetCacheAsync<T>(action.ControllerName, action.ActionName, argument);
+
+
 	public async Task SetCacheAsync(string controllerName, string actionName, object? value, TimeSpan? expiry = null) {
 		await SetCacheByKeyAsync(CreateKey(controllerName, actionName), value, expiry);
 	}
@@ -69,6 +84,14 @@ public class RedisCacheService(
 	public async Task DeleteCacheByArgumentAsync(ActionDto action, object argument) =>
 		await DeleteCacheByArgumentAsync(action.ControllerName, action.ActionName, argument);
 
+	public async Task ClearCache() {
+		foreach (var endpoint in connectionMultiplexer.GetEndPoints()) {
+			var server = connectionMultiplexer.GetServer(endpoint);
+
+			await server.FlushAllDatabasesAsync();
+		}
+	}
+
 
 
 	private async Task<bool> IsContainsCacheByKeyAsync(string key) {
@@ -79,7 +102,16 @@ public class RedisCacheService(
 		RedisValue json = await _redis.StringGetAsync(key);
 
 		if (json.IsNullOrEmpty)
-			throw new NullReferenceException("The key is not exists");
+			throw new KeyIsNotExistsException("The key is not exists");
+
+		return JsonSerializer.Deserialize<T>(json.ToString())!;
+	}
+
+	private async Task<T?> TryGetCacheByKeyAsync<T>(string key) {
+		RedisValue json = await _redis.StringGetAsync(key);
+
+		if (json.IsNullOrEmpty)
+			return default;
 
 		return JsonSerializer.Deserialize<T>(json.ToString())!;
 	}

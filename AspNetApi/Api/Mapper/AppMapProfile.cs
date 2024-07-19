@@ -96,5 +96,6 @@ public class AppMapProfile : Profile {
 			.ForMember(sv => sv.Value, opt => opt.MapFrom(src => src.SpecificationValue.Value))
 			.ForMember(sv => sv.SpecificationNameId, opt => opt.MapFrom(src => src.SpecificationValue.SpecificationNameId)
 		);
+		CreateMap<CreateSpecificationValueVm, SpecificationValue>();
 	}
 }

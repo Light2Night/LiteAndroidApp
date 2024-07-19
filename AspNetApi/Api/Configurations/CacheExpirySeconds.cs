@@ -5,4 +5,5 @@ public class CacheExpirySeconds {
 	public int IngredientsController { get; set; }
 	public int PizzasController { get; set; }
 	public int SizesController { get; set; }
+	public int SpecificationValuesController { get; set; }
 }

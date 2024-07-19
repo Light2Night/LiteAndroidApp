@@ -13,6 +13,11 @@ public interface ICacheService {
 	Task<T> GetCacheAsync<T>(string controllerName, string actionName, object argument);
 	Task<T> GetCacheAsync<T>(ActionDto action, object argument);
 
+	Task<T?> TryGetCacheAsync<T>(string controllerName, string actionName);
+	Task<T?> TryGetCacheAsync<T>(ActionDto action);
+	Task<T?> TryGetCacheAsync<T>(string controllerName, string actionName, object argument);
+	Task<T?> TryGetCacheAsync<T>(ActionDto action, object argument);
+
 	Task SetCacheAsync(string controllerName, string actionName, object? value, TimeSpan? expiry = null);
 	Task SetCacheAsync(ActionDto action, object? value, TimeSpan? expiry = null);
 	Task SetCacheAsync(string controllerName, string actionName, object argument, object? value, TimeSpan? expiry = null);
@@ -26,4 +31,6 @@ public interface ICacheService {
 
 	Task DeleteCacheByArgumentAsync(string controllerName, string actionName, object argument);
 	Task DeleteCacheByArgumentAsync(ActionDto action, object argument);
+
+	Task ClearCache();
 }
