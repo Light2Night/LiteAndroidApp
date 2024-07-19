@@ -57,4 +57,7 @@ public class ExistingEntityCheckerService(
 
 	public async Task<bool> IsExistsPizzaSizeKeyAsync(long pizzaId, long sizeId, CancellationToken cancellationToken) =>
 		await context.PizzaSizes.AnyAsync(ps => ps.PizzaId == pizzaId && ps.SizeId == sizeId, cancellationToken);
+
+	public async Task<bool> IsExistsSpecificationNameIdAsync(long id, CancellationToken cancellationToken) =>
+		await context.SpecificationNames.AnyAsync(sn => sn.Id == id, cancellationToken);
 }
