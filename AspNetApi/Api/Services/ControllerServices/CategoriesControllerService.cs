@@ -131,6 +131,7 @@ public class CategoriesControllerService(
 
 		await cacheService.DeleteCacheByControllerAsync(ControllerName);
 		await cacheService.DeleteCacheByControllerAsync(nameof(PizzasController));
+		await cacheService.DeleteCacheByControllerAsync(nameof(SpecificationValuesController));
 
 		imageService.DeleteImagesIfExists(imagesForDelete.Append(entity.Image));
 	}
